@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registrarse – Quiniela Mundial 2026</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --green: #1a7a4a; --green-light: #e8f5ee; --green-mid: #2d9e63;
+  --gold: #c9a227; --gold-light: #fdf4dc;
+  --red: #c0392b; --gray-100: #f4f4f2; --gray-200: #e8e6e0;
+  --gray-400: #aaa89e; --gray-700: #4a4a44; --gray-900: #1a1a18; --white: #fff;
+}
+body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f0ede5; color: var(--gray-900); min-height: 100vh; }
+
+.site-header { background: var(--green); color: white; padding: 24px; text-align: center; }
+.site-header h1 { font-size: 13px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; opacity: .7; margin-bottom: 4px; }
+.site-header h2 { font-size: 24px; font-weight: 700; }
+.site-header p { font-size: 13px; opacity: .65; margin-top: 4px; }
+
+.container { max-width: 700px; margin: 0 auto; padding: 24px 16px; }
+
+/* STEPS */
+.step { display: none; }
+.step.active { display: block; }
+
+/* CARDS */
+.card { background: var(--white); border-radius: 12px; border: 1px solid var(--gray-200); padding: 24px; margin-bottom: 20px; }
+.card-title { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 16px; border-bottom: 1px solid var(--gray-200); padding-bottom: 10px; }
+
+/* INPUTS */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 700; color: var(--gray-700); margin-bottom: 5px; }
+.field input[type=text], .field select {
+  width: 100%; border: 1px solid var(--gray-200); border-radius: 7px;
+  padding: 9px 12px; font-size: 14px; color: var(--gray-900);
+  transition: border .15s;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--green); }
+
+/* MATCH ROW */
+.match-row {
+  display: grid; grid-template-columns: 1fr 48px 20px 48px 1fr;
+  align-items: center; gap: 6px; padding: 6px 0;
+  border-bottom: 1px solid var(--gray-100);
+}
+.match-row:last-child { border-bottom: none; }
+.team-name { font-size: 13px; font-weight: 600; }
+.team-home { text-align: right; }
+.team-away { text-align: left; }
+.score-input {
+  width: 100%; text-align: center; font-size: 16px; font-weight: 700;
+  border: 1px solid var(--gray-200); border-radius: 6px; padding: 5px 4px;
+}
+.score-input:focus { outline: none; border-color: var(--green); }
+.dash { text-align: center; color: var(--gray-400); font-weight: 700; }
+
+/* GROUP HEADER */
+.group-header {
+  background: var(--gray-100); font-size: 11px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--gray-700);
+  padding: 7px 4px; margin: 12px 0 4px; border-radius: 5px;
+}
+
+/* BRACKET */
+.bracket-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--gray-100); }
+.bracket-row:last-child { border-bottom: none; }
+.bracket-label { font-size: 13px; color: var(--gray-700); flex: 1; }
+.bracket-row select { width: 180px; border: 1px solid var(--gray-200); border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+
+/* AWARDS */
+.award-row { display: flex; align-items: center; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid var(--gray-100); gap: 12px; }
+.award-row:last-child { border-bottom: none; }
+.award-label { font-size: 13px; color: var(--gray-700); flex: 1; }
+.award-pts { font-size: 11px; color: var(--gold); font-weight: 700; white-space: nowrap; }
+.award-row input { width: 180px; border: 1px solid var(--gray-200); border-radius: 6px; padding: 6px 10px; font-size: 13px; }
+
+/* BUTTONS */
+.btn-primary {
+  background: var(--green); color: white; border: none; width: 100%;
+  padding: 14px; border-radius: 9px; font-size: 15px; font-weight: 700;
+  cursor: pointer; margin-top: 8px; transition: background .15s;
+}
+.btn-primary:hover { background: var(--green-mid); }
+.btn-secondary {
+  background: var(--white); color: var(--gray-700); border: 1px solid var(--gray-200);
+  width: 100%; padding: 12px; border-radius: 9px; font-size: 14px; font-weight: 600;
+  cursor: pointer; margin-top: 8px;
+}
+
+/* PROGRESS BAR */
+.progress-wrap { margin-bottom: 20px; }
+.progress-track { height: 5px; background: var(--gray-200); border-radius: 3px; }
+.progress-fill { height: 100%; background: var(--green); border-radius: 3px; transition: width .4s; }
+.progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-400); margin-bottom: 6px; }
+
+/* MSG */
+.msg { padding: 12px 16px; border-radius: 8px; font-size: 14px; margin-top: 12px; }
+.msg.ok { background: var(--green-light); color: var(--green); }
+.msg.err { background: #fdecea; color: var(--red); }
+
+/* SUCCESS SCREEN */
+.success-screen { text-align: center; padding: 40px 20px; }
+.success-screen .trophy { font-size: 64px; margin-bottom: 16px; }
+.success-screen h2 { font-size: 24px; font-weight: 700; margin-bottom: 8px; }
+.success-screen p { color: var(--gray-400); margin-bottom: 24px; }
+
+/* LOADING */
+.loading-spinner { text-align: center; padding: 40px; color: var(--gray-400); font-size: 14px; }
+
+@media (max-width: 480px) {
+  .match-row { grid-template-columns: 1fr 42px 16px 42px 1fr; gap: 4px; }
+  .team-name { font-size: 11px; }
+  .score-input { font-size: 14px; }
+  .bracket-row select, .award-row input { width: 140px; font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="site-header">
+  <h1>Copa Mundial FIFA 2026</h1>
+  <h2>Registrar predicciones 🏆</h2>
+  <p>Completá tu quiniela · USA · México · Canadá</p>
+</div>
+
+<div class="container">
+
+  <!-- STEP 1: nombre -->
+  <div class="step active" id="step-nombre">
+    <div class="card">
+      <div class="card-title">Tu información</div>
+      <div class="field">
+        <label>Nombre completo</label>
+        <input type="text" id="input-nombre" placeholder="Ej: Juan Pérez" autocomplete="off">
+      </div>
+      <div class="field">
+        <label>Campeón del mundo 🏆</label>
+        <select id="input-campeon">
+          <option value="">— Seleccionar —</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="goToGroups()">Continuar → Fase de grupos</button>
+      <div id="msg-nombre"></div>
+    </div>
+    <div style="text-align:center;margin-top:16px">
+      <a href="index.html" style="font-size:13px;color:var(--gray-400)">← Ver ranking actual</a>
+    </div>
+  </div>
+
+  <!-- STEP 2: grupos -->
+  <div class="step" id="step-grupos">
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Paso 2 de 4 — Fase de grupos</span><span id="grupos-counter">0 / 72</span></div>
+      <div class="progress-track"><div class="progress-fill" id="grupos-bar" style="width:0%"></div></div>
+    </div>
+    <div id="grupos-container"></div>
+    <button class="btn-primary" onclick="goToBracket()">Continuar → Eliminatorias</button>
+    <button class="btn-secondary" onclick="goStep('step-nombre')">← Atrás</button>
+    <div id="msg-grupos"></div>
+  </div>
+
+  <!-- STEP 3: bracket -->
+  <div class="step" id="step-bracket">
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Paso 3 de 4 — Eliminatorias y Final</span><span></span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:75%"></div></div>
+    </div>
+    <div id="bracket-container"></div>
+    <button class="btn-primary" onclick="goToAwards()">Continuar → Premios individuales</button>
+    <button class="btn-secondary" onclick="goStep('step-grupos')">← Atrás</button>
+  </div>
+
+  <!-- STEP 4: premios -->
+  <div class="step" id="step-premios">
+    <div class="progress-wrap">
+      <div class="progress-label"><span>Paso 4 de 4 — Premios individuales</span><span></span></div>
+      <div class="progress-track"><div class="progress-fill" style="width:95%"></div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Premios individuales</div>
+      <div id="awards-container"></div>
+    </div>
+    <button class="btn-primary" onclick="submit()">Enviar mi quiniela ✓</button>
+    <button class="btn-secondary" onclick="goStep('step-bracket')">← Atrás</button>
+    <div id="msg-submit"></div>
+  </div>
+
+  <!-- STEP 5: success -->
+  <div class="step" id="step-success">
+    <div class="card success-screen">
+      <div class="trophy">🏆</div>
+      <h2>¡Quiniela registrada!</h2>
+      <p id="success-msg">Tus predicciones fueron guardadas. ¡Buena suerte!</p>
+      <a href="index.html"><button class="btn-primary">Ver el ranking →</button></a>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const WRITE_URL = "https://script.google.com/macros/s/AKfycbyvElMpByOyo7B3sDvoco1kjhCxzubmDtv1VQbALY9SxNQV2OthSaBSalJpcU3fY6MW/exec";
+
+const TEAMS = [
+  "México","Sudáfrica","Corea del Sur","Rep. Checa","Canadá","Bosnia y Herz.","Catar","Suiza",
+  "Brasil","Marruecos","Haití","Escocia","Estados Unidos","Paraguay","Australia","Turquía",
+  "Alemania","Curazao","Costa de Marfil","Ecuador","Países Bajos","Japón","Suecia","Túnez",
+  "Bélgica","Egipto","Irán","Nueva Zelanda","España","Cabo Verde","Arabia Saudita","Uruguay",
+  "Francia","Senegal","Irak","Noruega","Argentina","Argelia","Austria","Jordania",
+  "Portugal","RD Congo","Uzbekistán","Colombia","Inglaterra","Croacia","Ghana","Panamá"
+].sort();
+
+const MATCHES = [
+  {id:"M01",g:"A",d:"11/6",h:"México",a:"Sudáfrica"},{id:"M02",g:"A",d:"11/6",h:"Corea del Sur",a:"Rep. Checa"},
+  {id:"M03",g:"A",d:"18/6",h:"Rep. Checa",a:"Sudáfrica"},{id:"M04",g:"A",d:"18/6",h:"México",a:"Corea del Sur"},
+  {id:"M05",g:"A",d:"24/6",h:"Rep. Checa",a:"México"},{id:"M06",g:"A",d:"24/6",h:"Sudáfrica",a:"Corea del Sur"},
+  {id:"M07",g:"B",d:"12/6",h:"Canadá",a:"Bosnia y Herz."},{id:"M08",g:"B",d:"13/6",h:"Catar",a:"Suiza"},
+  {id:"M09",g:"B",d:"18/6",h:"Suiza",a:"Bosnia y Herz."},{id:"M10",g:"B",d:"18/6",h:"Canadá",a:"Catar"},
+  {id:"M11",g:"B",d:"24/6",h:"Suiza",a:"Canadá"},{id:"M12",g:"B",d:"24/6",h:"Bosnia y Herz.",a:"Catar"},
+  {id:"M13",g:"C",d:"13/6",h:"Brasil",a:"Marruecos"},{id:"M14",g:"C",d:"13/6",h:"Haití",a:"Escocia"},
+  {id:"M15",g:"C",d:"19/6",h:"Escocia",a:"Marruecos"},{id:"M16",g:"C",d:"19/6",h:"Brasil",a:"Haití"},
+  {id:"M17",g:"C",d:"24/6",h:"Escocia",a:"Brasil"},{id:"M18",g:"C",d:"24/6",h:"Marruecos",a:"Haití"},
+  {id:"M19",g:"D",d:"12/6",h:"Estados Unidos",a:"Paraguay"},{id:"M20",g:"D",d:"13/6",h:"Australia",a:"Turquía"},
+  {id:"M21",g:"D",d:"19/6",h:"Turquía",a:"Paraguay"},{id:"M22",g:"D",d:"19/6",h:"Estados Unidos",a:"Australia"},
+  {id:"M23",g:"D",d:"25/6",h:"Turquía",a:"Estados Unidos"},{id:"M24",g:"D",d:"25/6",h:"Paraguay",a:"Australia"},
+  {id:"M25",g:"E",d:"14/6",h:"Alemania",a:"Curazao"},{id:"M26",g:"E",d:"14/6",h:"Costa de Marfil",a:"Ecuador"},
+  {id:"M27",g:"E",d:"20/6",h:"Alemania",a:"Costa de Marfil"},{id:"M28",g:"E",d:"20/6",h:"Ecuador",a:"Curazao"},
+  {id:"M29",g:"E",d:"25/6",h:"Ecuador",a:"Alemania"},{id:"M30",g:"E",d:"25/6",h:"Curazao",a:"Costa de Marfil"},
+  {id:"M31",g:"F",d:"14/6",h:"Países Bajos",a:"Japón"},{id:"M32",g:"F",d:"14/6",h:"Suecia",a:"Túnez"},
+  {id:"M33",g:"F",d:"20/6",h:"Países Bajos",a:"Suecia"},{id:"M34",g:"F",d:"20/6",h:"Túnez",a:"Japón"},
+  {id:"M35",g:"F",d:"25/6",h:"Japón",a:"Suecia"},{id:"M36",g:"F",d:"25/6",h:"Túnez",a:"Países Bajos"},
+  {id:"M37",g:"G",d:"15/6",h:"Bélgica",a:"Egipto"},{id:"M38",g:"G",d:"15/6",h:"Irán",a:"Nueva Zelanda"},
+  {id:"M39",g:"G",d:"21/6",h:"Bélgica",a:"Irán"},{id:"M40",g:"G",d:"21/6",h:"Nueva Zelanda",a:"Egipto"},
+  {id:"M41",g:"G",d:"26/6",h:"Nueva Zelanda",a:"Bélgica"},{id:"M42",g:"G",d:"26/6",h:"Egipto",a:"Irán"},
+  {id:"M43",g:"H",d:"15/6",h:"España",a:"Cabo Verde"},{id:"M44",g:"H",d:"15/6",h:"Arabia Saudita",a:"Uruguay"},
+  {id:"M45",g:"H",d:"21/6",h:"España",a:"Arabia Saudita"},{id:"M46",g:"H",d:"21/6",h:"Uruguay",a:"Cabo Verde"},
+  {id:"M47",g:"H",d:"26/6",h:"Uruguay",a:"España"},{id:"M48",g:"H",d:"26/6",h:"Cabo Verde",a:"Arabia Saudita"},
+  {id:"M49",g:"I",d:"16/6",h:"Francia",a:"Senegal"},{id:"M50",g:"I",d:"16/6",h:"Irak",a:"Noruega"},
+  {id:"M51",g:"I",d:"22/6",h:"Francia",a:"Irak"},{id:"M52",g:"I",d:"22/6",h:"Noruega",a:"Senegal"},
+  {id:"M53",g:"I",d:"26/6",h:"Noruega",a:"Francia"},{id:"M54",g:"I",d:"26/6",h:"Senegal",a:"Irak"},
+  {id:"M55",g:"J",d:"16/6",h:"Argentina",a:"Argelia"},{id:"M56",g:"J",d:"16/6",h:"Austria",a:"Jordania"},
+  {id:"M57",g:"J",d:"22/6",h:"Argentina",a:"Austria"},{id:"M58",g:"J",d:"22/6",h:"Jordania",a:"Argelia"},
+  {id:"M59",g:"J",d:"27/6",h:"Argelia",a:"Austria"},{id:"M60",g:"J",d:"27/6",h:"Jordania",a:"Argentina"},
+  {id:"M61",g:"K",d:"17/6",h:"Portugal",a:"RD Congo"},{id:"M62",g:"K",d:"17/6",h:"Uzbekistán",a:"Colombia"},
+  {id:"M63",g:"K",d:"23/6",h:"Portugal",a:"Uzbekistán"},{id:"M64",g:"K",d:"23/6",h:"Colombia",a:"RD Congo"},
+  {id:"M65",g:"K",d:"27/6",h:"Colombia",a:"Portugal"},{id:"M66",g:"K",d:"27/6",h:"RD Congo",a:"Uzbekistán"},
+  {id:"M67",g:"L",d:"17/6",h:"Inglaterra",a:"Croacia"},{id:"M68",g:"L",d:"17/6",h:"Ghana",a:"Panamá"},
+  {id:"M69",g:"L",d:"23/6",h:"Inglaterra",a:"Ghana"},{id:"M70",g:"L",d:"23/6",h:"Panamá",a:"Croacia"},
+  {id:"M71",g:"L",d:"27/6",h:"Panamá",a:"Inglaterra"},{id:"M72",g:"L",d:"27/6",h:"Croacia",a:"Ghana"},
+];
+
+const BRACKET_PHASES = [
+  {phase:"16avos", matches:[
+    {id:"M73",label:"16avos — M73"},{id:"M74",label:"16avos — M74"},{id:"M75",label:"16avos — M75"},
+    {id:"M76",label:"16avos — M76"},{id:"M77",label:"16avos — M77"},{id:"M78",label:"16avos — M78"},
+    {id:"M79",label:"16avos — M79"},{id:"M80",label:"16avos — M80"},{id:"M81",label:"16avos — M81"},
+    {id:"M82",label:"16avos — M82"},{id:"M83",label:"16avos — M83"},{id:"M84",label:"16avos — M84"},
+    {id:"M85",label:"16avos — M85"},{id:"M86",label:"16avos — M86"},{id:"M87",label:"16avos — M87"},
+    {id:"M88",label:"16avos — M88"},
+  ]},
+  {phase:"Octavos", matches:[
+    {id:"M89",label:"Octavos — M89"},{id:"M90",label:"Octavos — M90"},{id:"M91",label:"Octavos — M91"},
+    {id:"M92",label:"Octavos — M92"},{id:"M93",label:"Octavos — M93"},{id:"M94",label:"Octavos — M94"},
+    {id:"M95",label:"Octavos — M95"},{id:"M96",label:"Octavos — M96"},
+  ]},
+  {phase:"Cuartos", matches:[
+    {id:"M97",label:"Cuartos — M97"},{id:"M98",label:"Cuartos — M98"},
+    {id:"M99",label:"Cuartos — M99"},{id:"M100",label:"Cuartos — M100"},
+  ]},
+  {phase:"Semis", matches:[
+    {id:"M101",label:"Semifinal 1"},{id:"M102",label:"Semifinal 2"},
+  ]},
+  {phase:"Final", matches:[
+    {id:"M103",label:"🏆 Campeón (Final)"},{id:"M104",label:"🥉 3er lugar"},
+  ]},
+];
+
+const AWARDS = [
+  {id:"BOTA_ORO",    label:"Bota de Oro",          pts:8},
+  {id:"BOTA_PLATA",  label:"Bota de Plata",         pts:5},
+  {id:"BOTA_BRONCE", label:"Bota de Bronce",        pts:3},
+  {id:"BALON_ORO",   label:"Balón de Oro",          pts:8},
+  {id:"BALON_PLATA", label:"Balón de Plata",        pts:5},
+  {id:"BALON_BRONCE",label:"Balón de Bronce",       pts:3},
+  {id:"JOVEN",       label:"Mejor Jugador Joven",   pts:6},
+  {id:"GUANTE",      label:"Guante de Oro",         pts:6},
+];
+
+// ── State ──────────────────────────────────────────────────
+let formData = { nombre:"", champion:"", predictions:{}, bracket:{}, awards:{} };
+
+// ── Init ──────────────────────────────────────────────────
+function init() {
+  // Populate champion dropdown
+  const sel = document.getElementById('input-campeon');
+  TEAMS.forEach(t => sel.innerHTML += `<option value="${t}">${t}</option>`);
+
+  // Build groups form
+  buildGroups();
+
+  // Build bracket form
+  buildBracket();
+
+  // Build awards form
+  buildAwards();
+}
+
+// ── Step navigation ───────────────────────────────────────
+function goStep(id) {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function goToGroups() {
+  const nombre = document.getElementById('input-nombre').value.trim();
+  const champion = document.getElementById('input-campeon').value;
+  if (!nombre) {
+    document.getElementById('msg-nombre').innerHTML = '<div class="msg err">Ingresá tu nombre</div>';
+    return;
+  }
+  if (!champion) {
+    document.getElementById('msg-nombre').innerHTML = '<div class="msg err">Seleccioná un campeón</div>';
+    return;
+  }
+  formData.nombre = nombre;
+  formData.champion = champion;
+  goStep('step-grupos');
+  updateGroupsCounter();
+}
+
+function goToBracket() {
+  // Validate all groups filled
+  let missing = 0;
+  MATCHES.forEach(m => {
+    const h = document.getElementById('gh_'+m.id)?.value;
+    const a = document.getElementById('ga_'+m.id)?.value;
+    if (h === '' || a === '') missing++;
+  });
+  if (missing > 0) {
+    document.getElementById('msg-grupos').innerHTML = `<div class="msg err">Faltan ${missing} partidos por completar</div>`;
+    return;
+  }
+  document.getElementById('msg-grupos').innerHTML = '';
+  // Save predictions
+  MATCHES.forEach(m => {
+    formData.predictions[m.id] = {
+      h: parseInt(document.getElementById('gh_'+m.id).value),
+      a: parseInt(document.getElementById('ga_'+m.id).value)
+    };
+  });
+  goStep('step-bracket');
+}
+
+function goToAwards() {
+  // Save bracket
+  BRACKET_PHASES.forEach(phase => {
+    phase.matches.forEach(m => {
+      const val = document.getElementById('br_'+m.id)?.value;
+      if (val) formData.bracket[m.id] = val;
+    });
+  });
+  goStep('step-premios');
+}
+
+async function submit() {
+  // Save awards
+  AWARDS.forEach(a => {
+    const val = document.getElementById('aw_'+a.id)?.value.trim();
+    if (val) formData.awards[a.id] = val;
+  });
+
+  document.getElementById('msg-submit').innerHTML = '<div class="msg ok">Guardando...</div>';
+
+  const payload = {
+    name: formData.nombre,
+    champion: formData.champion,
+    predictions: formData.predictions,
+    bracket: formData.bracket,
+    awards: formData.awards
+  };
+
+  try {
+    await fetch(WRITE_URL + "?action=register&nombre=" + encodeURIComponent(formData.nombre) + "&data=" + encodeURIComponent(JSON.stringify(payload)), {mode:'no-cors'});
+    document.getElementById('success-msg').textContent = `¡Listo, ${formData.nombre}! Tus predicciones fueron guardadas. ¡Buena suerte!`;
+    goStep('step-success');
+  } catch(e) {
+    document.getElementById('msg-submit').innerHTML = '<div class="msg err">Error al guardar. Intentá de nuevo.</div>';
+  }
+}
+
+// ── Build groups ──────────────────────────────────────────
+function buildGroups() {
+  const container = document.getElementById('grupos-container');
+  let html = '';
+  let lastGroup = '';
+
+  MATCHES.forEach(m => {
+    if (m.g !== lastGroup) {
+      if (lastGroup) html += '</div>';
+      html += `<div class="card"><div class="card-title">Grupo ${m.g}</div>`;
+      lastGroup = m.g;
+    }
+    html += `
+      <div class="match-row">
+        <div class="team-name team-home">${m.h}</div>
+        <input class="score-input" type="number" id="gh_${m.id}" min="0" max="20" placeholder="–"
+          oninput="updateGroupsCounter()" onchange="clampScore(this)">
+        <div class="dash">–</div>
+        <input class="score-input" type="number" id="ga_${m.id}" min="0" max="20" placeholder="–"
+          oninput="updateGroupsCounter()" onchange="clampScore(this)">
+        <div class="team-name team-away">${m.a}</div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+}
+
+function clampScore(el) {
+  let v = parseInt(el.value);
+  if (isNaN(v) || v < 0) el.value = 0;
+  if (v > 20) el.value = 20;
+}
+
+function updateGroupsCounter() {
+  let filled = 0;
+  MATCHES.forEach(m => {
+    const h = document.getElementById('gh_'+m.id)?.value;
+    const a = document.getElementById('ga_'+m.id)?.value;
+    if (h !== '' && a !== '') filled++;
+  });
+  document.getElementById('grupos-counter').textContent = filled + ' / 72';
+  document.getElementById('grupos-bar').style.width = Math.round(filled/72*100) + '%';
+}
+
+// ── Build bracket ─────────────────────────────────────────
+function buildBracket() {
+  const container = document.getElementById('bracket-container');
+  let html = '';
+  BRACKET_PHASES.forEach(phase => {
+    html += `<div class="card"><div class="card-title">${phase.phase}</div>`;
+    phase.matches.forEach(m => {
+      html += `<div class="bracket-row">
+        <div class="bracket-label">${m.label} — Ganador</div>
+        <select id="br_${m.id}">
+          <option value="">— Seleccionar —</option>
+          ${TEAMS.map(t => `<option value="${t}">${t}</option>`).join('')}
+        </select>
+      </div>`;
+    });
+    html += '</div>';
+  });
+  container.innerHTML = html;
+}
+
+// ── Build awards ──────────────────────────────────────────
+function buildAwards() {
+  const container = document.getElementById('awards-container');
+  container.innerHTML = AWARDS.map(a => `
+    <div class="award-row">
+      <div class="award-label">${a.label}</div>
+      <div class="award-pts">+${a.pts} pts</div>
+      <input type="text" id="aw_${a.id}" placeholder="Nombre del jugador">
+    </div>
+  `).join('');
+}
+
+init();
+</script>
+</body>
+</html>

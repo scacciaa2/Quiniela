@@ -410,7 +410,7 @@
       <h2>Quiniela 2026 🏆</h2>
       <div class="subtitle">USA · México · Canadá &nbsp;·&nbsp; 11 jun – 19 jul</div>
     </div>
-    <button class="admin-btn" onclick="openAdmin()">⚙ Admin</button>
+    <div style="display:flex;gap:8px;align-items:center"><a href="registro.html"><button class="admin-btn" style="background:rgba(201,162,39,0.3);border-color:rgba(201,162,39,0.6)">+ Registrarse</button></a><button class="admin-btn" onclick="openAdmin()">⚙ Admin</button></div>
   </div>
   <div id="loading-bar" style="display:none;height:3px;background:#c9a227;width:100%"></div>
   <div class="nav-tabs" style="justify-content:space-between;align-items:center">
@@ -677,6 +677,7 @@ const PTS = {
 const SHEET_ID = "1ev8q-52EFvlsfKJyn2KEQ5YgVPsZFyGYcHuKjD_C2f8";
 const SHEET_RESULTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=resultados`;
 const SHEET_WRITE_URL = "https://script.google.com/macros/s/AKfycbyvElMpByOyo7B3sDvoco1kjhCxzubmDtv1VQbALY9SxNQV2OthSaBSalJpcU3fY6MW/exec";
+const SHEET_PLAYERS_URL = SHEET_WRITE_URL + "?action=getPlayers";
 
 // ==================== STATE ====================
 // Players/predictions hardcoded. Results fetched from Google Sheets.
@@ -684,7 +685,7 @@ const SHEET_WRITE_URL = "https://script.google.com/macros/s/AKfycbyvElMpByOyo7B3
 let STATE = {
   results: {},
   awards: {},
-  players: [buildAlessandro(), buildCarlos()],
+  players: [buildAlessandro(), buildCarlos(), buildReinaldo()],
   lastFetch: 0
 };
 
@@ -729,14 +730,43 @@ function updateLastSync() {
   }
 }
 
+async function fetchPlayersFromSheet() {
+  try {
+    const res = await fetch(SHEET_PLAYERS_URL, {mode:'no-cors'});
+    // no-cors means we can't read the response — use gviz instead
+  } catch(e) {}
+  // Read participantes sheet via gviz (public read)
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=participantes`;
+    const res = await fetch(url);
+    const text = await res.text();
+    const json = JSON.parse(text.replace(/^.*?({.*})\s*\);\s*$/s, '$1'));
+    if (!json.table || !json.table.rows) return;
+    for (const row of json.table.rows) {
+      if (!row.c || !row.c[0] || !row.c[0].v) continue;
+      try {
+        const player = JSON.parse(row.c[1].v);
+        if (!player || !player.name) continue;
+        const exists = STATE.players.findIndex(p => p.name === player.name);
+        if (exists >= 0) STATE.players[exists] = player;
+        else STATE.players.push(player);
+      } catch(e) {}
+    }
+  } catch(e) {
+    console.warn("Could not fetch players:", e);
+  }
+}
+
 async function initState() {
   showLoading(true);
   await fetchResultsFromSheet();
+  await fetchPlayersFromSheet();
   showLoading(false);
   render();
   // Auto-refresh every 60 seconds
   setInterval(async () => {
     await fetchResultsFromSheet();
+    await fetchPlayersFromSheet();
     render();
   }, 60000);
 }
@@ -812,6 +842,41 @@ function buildCarlos() {
       BOTA_ORO:"Harry Kane", BOTA_PLATA:"Kylian Mbappe", BOTA_BRONCE:"Mikel Oyarzabal",
       BALON_ORO:"Vitinha", BALON_PLATA:"Lamine Yamal", BALON_BRONCE:"Michael Olise",
       JOVEN:"Lamine Yamal", GUANTE:"Diogo Costa"
+    }
+  };
+}
+
+function buildReinaldo() {
+  return {
+    name: "Reinaldo Hernandez",
+    champion: "Portugal",
+    predictions: {
+      M01:{h:2,a:1},M02:{h:1,a:1},M03:{h:2,a:0},M04:{h:1,a:1},M05:{h:1,a:2},M06:{h:0,a:2},
+      M07:{h:1,a:0},M08:{h:0,a:2},M09:{h:2,a:2},M10:{h:2,a:0},M11:{h:2,a:1},M12:{h:2,a:1},
+      M13:{h:3,a:2},M14:{h:1,a:0},M15:{h:1,a:2},M16:{h:4,a:1},M17:{h:1,a:2},M18:{h:2,a:1},
+      M19:{h:1,a:1},M20:{h:1,a:2},M21:{h:1,a:2},M22:{h:1,a:0},M23:{h:2,a:2},M24:{h:1,a:0},
+      M25:{h:4,a:0},M26:{h:0,a:0},M27:{h:3,a:1},M28:{h:2,a:0},M29:{h:1,a:2},M30:{h:0,a:2},
+      M31:{h:2,a:0},M32:{h:2,a:1},M33:{h:1,a:1},M34:{h:0,a:1},M35:{h:1,a:2},M36:{h:0,a:3},
+      M37:{h:2,a:1},M38:{h:1,a:0},M39:{h:3,a:1},M40:{h:1,a:2},M41:{h:0,a:3},M42:{h:1,a:1},
+      M43:{h:3,a:0},M44:{h:0,a:2},M45:{h:3,a:1},M46:{h:2,a:0},M47:{h:1,a:1},M48:{h:1,a:1},
+      M49:{h:2,a:0},M50:{h:0,a:2},M51:{h:3,a:0},M52:{h:1,a:1},M53:{h:1,a:2},M54:{h:1,a:1},
+      M55:{h:3,a:0},M56:{h:2,a:0},M57:{h:1,a:0},M58:{h:1,a:1},M59:{h:1,a:2},M60:{h:0,a:2},
+      M61:{h:3,a:0},M62:{h:0,a:2},M63:{h:2,a:1},M64:{h:2,a:0},M65:{h:2,a:2},M66:{h:1,a:2},
+      M67:{h:2,a:1},M68:{h:2,a:1},M69:{h:3,a:1},M70:{h:1,a:2},M71:{h:0,a:3},M72:{h:1,a:1},
+    },
+    bracket: {
+      M73:"Canadá",M74:"Alemania",M75:"Marruecos",M76:"Brasil",M77:"Francia",M78:"Noruega",
+      M79:"México",M80:"Inglaterra",M81:"Paraguay",M82:"Bélgica",M83:"Colombia",
+      M84:"España",M85:"Suiza",M86:"Argentina",M87:"Portugal",M88:"Estados Unidos",
+      M89:"Francia",M90:"Marruecos",M91:"Brasil",M92:"Inglaterra",M93:"España",
+      M94:"Bélgica",M95:"Argentina",M96:"Portugal",
+      M97:"Francia",M98:"España",M99:"Inglaterra",M100:"Portugal",
+      M101:"España",M102:"Portugal",M103:"Portugal",M104:"Francia"
+    },
+    awards: {
+      BOTA_ORO:"Kylian Mbappé", BOTA_PLATA:"Harry Kane", BOTA_BRONCE:"Julián Alvarez",
+      BALON_ORO:"Lamine Yamal", BALON_PLATA:"Kylian Mbappé", BALON_BRONCE:"Jude Bellingham",
+      JOVEN:"Lamine Yamal", GUANTE:"Unai Simón"
     }
   };
 }

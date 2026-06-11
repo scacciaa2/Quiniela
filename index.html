@@ -455,8 +455,7 @@
           <th>Fecha</th>
           <th>Partido</th>
           <th>Real</th>
-          <th id="p1-col-header">P1</th>
-          <th id="p2-col-header">P2</th>
+          <th id="player-col-headers"></th>
         </tr>
       </thead>
       <tbody id="matches-tbody"></tbody>
@@ -958,10 +957,21 @@ function render() {
 }
 
 function updatePlayerHeaders(s) {
-  const p1 = s.players[0];
-  const p2 = s.players[1];
-  document.getElementById('p1-col-header').textContent = p1 ? p1.name.split(' ')[0] : 'P1';
-  document.getElementById('p2-col-header').textContent = p2 ? p2.name.split(' ')[0] : 'P2';
+  // Rebuild the entire matches table thead dynamically
+  const thead = document.querySelector('#matches-table thead tr');
+  if (!thead) return;
+  // Keep first 4 cols (Match, Fecha, Partido, Real), replace rest
+  const baseCols = thead.querySelectorAll('th');
+  // Remove all player cols (index >= 4)
+  while (thead.children.length > 4) thead.removeChild(thead.lastChild);
+  // Add one per player
+  s.players.forEach(p => {
+    const th = document.createElement('th');
+    th.style.minWidth = '60px';
+    th.style.textAlign = 'center';
+    th.textContent = p.name.split(' ')[0];
+    thead.appendChild(th);
+  });
 }
 
 function renderRanking(s) {
@@ -998,9 +1008,6 @@ function renderRanking(s) {
 }
 
 function renderMatches(s) {
-  const p1 = s.players[0];
-  const p2 = s.players[1];
-
   // Build phase filter buttons
   const phases = ["all","Grupos","16avos","Octavos","Cuartos","Semis","Final"];
   const filterBar = document.getElementById('phase-filter');
@@ -1031,33 +1038,33 @@ function renderMatches(s) {
     let scoreClass = r ? 'played' : 'pending';
 
     // P1 points
-    let p1pts = null, p2pts = null;
-    if (r) {
-      if (isGroup) {
-        p1pts = p1 && p1.predictions[m.id] ? scoreMatch(m.id, p1.predictions[m.id], r) : null;
-        p2pts = p2 && p2.predictions[m.id] ? scoreMatch(m.id, p2.predictions[m.id], r) : null;
-      } else {
-        p1pts = p1 && p1.bracket[m.id] ? scoreBracket(m.id, m.phase, p1.bracket[m.id], r.winner) : null;
-        p2pts = p2 && p2.bracket[m.id] ? scoreBracket(m.id, m.phase, p2.bracket[m.id], r.winner) : null;
-      }
-    }
-
     const ptsCell = (pts, pred) => {
       if (!r) return `<td class="pts-cell"><span class="pred-score">${pred||'?'}</span></td>`;
       const cls = pts===3?'pts-3':pts===1?'pts-1':pts===0?'pts-0':'pts-pending';
       return `<td class="pts-cell ${cls}">+${pts}<br><span class="pred-score">${pred||'?'}</span></td>`;
     };
 
-    const p1pred = isGroup ? (p1?.predictions[m.id] ? `${p1.predictions[m.id].h}–${p1.predictions[m.id].a}` : '?') : (p1?.bracket[m.id]||'?');
-    const p2pred = isGroup ? (p2?.predictions[m.id] ? `${p2.predictions[m.id].h}–${p2.predictions[m.id].a}` : '?') : (p2?.bracket[m.id]||'?');
+    const playerCells = s.players.map(p => {
+      let pts = null;
+      if (r) {
+        if (isGroup) {
+          pts = p.predictions && p.predictions[m.id] ? scoreMatch(m.id, p.predictions[m.id], r) : null;
+        } else {
+          pts = p.bracket && p.bracket[m.id] ? scoreBracket(m.id, m.phase, p.bracket[m.id], r.winner) : null;
+        }
+      }
+      const pred = isGroup
+        ? (p.predictions && p.predictions[m.id] ? `${p.predictions[m.id].h}–${p.predictions[m.id].a}` : '?')
+        : (p.bracket && p.bracket[m.id] ? p.bracket[m.id] : '?');
+      return ptsCell(pts, pred);
+    }).join('');
 
     html += `<tr>
       <td class="match-id">${m.id}</td>
       <td class="match-date">${m.date}</td>
       <td class="match-teams">${m.home} vs ${m.away}</td>
       <td><span class="result-score ${scoreClass}">${realScore}</span></td>
-      ${ptsCell(p1pts, p1pred)}
-      ${ptsCell(p2pts, p2pred)}
+      ${playerCells}
     </tr>`;
   }
   tbody.innerHTML = html;

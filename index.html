@@ -684,7 +684,7 @@ const SHEET_PLAYERS_URL = SHEET_WRITE_URL + "?action=getPlayers";
 let STATE = {
   results: {},
   awards: {},
-  players: [buildAlessandro(), buildCarlos(), buildReinaldo()],
+  players: [buildAlessandro(), buildCarlos(), buildReinaldo(), buildLucho(), buildValentino()],
   lastFetch: 0
 };
 
@@ -880,6 +880,76 @@ function buildReinaldo() {
   };
 }
 
+function buildLucho() {
+  return {
+    name: "Luis Catari",
+    champion: "Brasil",
+    predictions: {
+      M01:{h:2,a:0},M02:{h:1,a:1},M03:{h:2,a:1},M04:{h:1,a:0},M05:{h:2,a:2},M06:{h:0,a:2},
+      M07:{h:2,a:1},M08:{h:0,a:2},M09:{h:2,a:0},M10:{h:3,a:1},M11:{h:1,a:1},M12:{h:2,a:0},
+      M13:{h:2,a:1},M14:{h:0,a:2},M15:{h:1,a:2},M16:{h:4,a:0},M17:{h:0,a:2},M18:{h:3,a:0},
+      M19:{h:0,a:1},M20:{h:1,a:2},M21:{h:1,a:1},M22:{h:2,a:0},M23:{h:1,a:1},M24:{h:2,a:0},
+      M25:{h:4,a:0},M26:{h:1,a:1},M27:{h:2,a:1},M28:{h:3,a:0},M29:{h:1,a:1},M30:{h:0,a:3},
+      M31:{h:1,a:1},M32:{h:2,a:1},M33:{h:2,a:0},M34:{h:0,a:2},M35:{h:1,a:0},M36:{h:0,a:3},
+      M37:{h:2,a:1},M38:{h:2,a:0},M39:{h:2,a:0},M40:{h:0,a:2},M41:{h:0,a:3},M42:{h:3,a:1},
+      M43:{h:3,a:1},M44:{h:0,a:2},M45:{h:3,a:0},M46:{h:2,a:0},M47:{h:1,a:2},M48:{h:1,a:1},
+      M49:{h:3,a:1},M50:{h:0,a:3},M51:{h:4,a:0},M52:{h:2,a:0},M53:{h:1,a:2},M54:{h:2,a:0},
+      M55:{h:3,a:0},M56:{h:2,a:0},M57:{h:2,a:0},M58:{h:0,a:1},M59:{h:2,a:2},M60:{h:0,a:3},
+      M61:{h:3,a:0},M62:{h:0,a:2},M63:{h:2,a:0},M64:{h:3,a:1},M65:{h:1,a:2},M66:{h:1,a:2},
+      M67:{h:3,a:1},M68:{h:1,a:0},M69:{h:2,a:0},M70:{h:0,a:2},M71:{h:0,a:4},M72:{h:2,a:1},
+    },
+    bracket: {
+      M73:"Canadá",M74:"Alemania",M75:"Países Bajos",M76:"Brasil",M77:"Francia",M78:"Ecuador",
+      M79:"Costa de Marfil",M80:"Inglaterra",M81:"Paraguay",M82:"Bélgica",M83:"Colombia",
+      M84:"España",M85:"Suiza",M86:"Uruguay",M87:"Portugal",M88:"Turquía",
+      M89:"Francia",M90:"Países Bajos",M91:"Brasil",M92:"Inglaterra",M93:"España",
+      M94:"Paraguay",M95:"Uruguay",M96:"Portugal",
+      M97:"Francia",M98:"España",M99:"Brasil",M100:"Portugal",
+      M101:"Francia",M102:"Brasil",M103:"Brasil",M104:"España"
+    },
+    awards: {
+      BOTA_ORO:"Kylian Mbappe", BOTA_PLATA:"Harry Kane", BOTA_BRONCE:"Michael Olise",
+      BALON_ORO:"Michael Olise", BALON_PLATA:"Vinicius Jr", BALON_BRONCE:"Kylian Mbappe",
+      JOVEN:"Lamine Yamal", GUANTE:"David Raya"
+    }
+  };
+}
+
+function buildValentino() {
+  return {
+    name: "Valentino Scaccia",
+    champion: "Francia",
+    predictions: {
+      M01:{h:2,a:1},M02:{h:1,a:1},M03:{h:1,a:0},M04:{h:1,a:1},M05:{h:1,a:1},M06:{h:1,a:1},
+      M07:{h:1,a:1},M08:{h:0,a:2},M09:{h:1,a:0},M10:{h:1,a:0},M11:{h:1,a:1},M12:{h:2,a:0},
+      M13:{h:3,a:1},M14:{h:0,a:2},M15:{h:0,a:1},M16:{h:4,a:0},M17:{h:0,a:2},M18:{h:2,a:0},
+      M19:{h:2,a:0},M20:{h:0,a:2},M21:{h:2,a:1},M22:{h:1,a:0},M23:{h:2,a:1},M24:{h:0,a:0},
+      M25:{h:4,a:0},M26:{h:1,a:1},M27:{h:2,a:0},M28:{h:2,a:0},M29:{h:0,a:2},M30:{h:0,a:1},
+      M31:{h:2,a:1},M32:{h:2,a:0},M33:{h:1,a:1},M34:{h:0,a:1},M35:{h:1,a:2},M36:{h:0,a:3},
+      M37:{h:3,a:0},M38:{h:1,a:1},M39:{h:2,a:0},M40:{h:1,a:1},M41:{h:0,a:2},M42:{h:1,a:1},
+      M43:{h:4,a:0},M44:{h:0,a:2},M45:{h:3,a:0},M46:{h:2,a:0},M47:{h:1,a:2},M48:{h:0,a:1},
+      M49:{h:3,a:0},M50:{h:0,a:3},M51:{h:3,a:0},M52:{h:2,a:0},M53:{h:1,a:1},M54:{h:2,a:0},
+      M55:{h:4,a:0},M56:{h:3,a:1},M57:{h:2,a:0},M58:{h:1,a:1},M59:{h:1,a:1},M60:{h:0,a:4},
+      M61:{h:3,a:0},M62:{h:0,a:2},M63:{h:2,a:0},M64:{h:2,a:0},M65:{h:1,a:1},M66:{h:0,a:2},
+      M67:{h:1,a:1},M68:{h:2,a:0},M69:{h:2,a:0},M70:{h:0,a:2},M71:{h:0,a:2},M72:{h:2,a:0},
+    },
+    bracket: {
+      M73:"Rep. Checa",M74:"Alemania",M75:"Países Bajos",M76:"Brasil",M77:"Francia",M78:"Noruega",
+      M79:"México",M80:"Croacia",M81:"Turquía",M82:"Bélgica",M83:"Inglaterra",
+      M84:"España",M85:"Corea del Sur",M86:"Argentina",M87:"Portugal",M88:"Estados Unidos",
+      M89:"Francia",M90:"Países Bajos",M91:"Brasil",M92:"Croacia",M93:"España",
+      M94:"Bélgica",M95:"Argentina",M96:"Portugal",
+      M97:"Francia",M98:"España",M99:"Brasil",M100:"Portugal",
+      M101:"Francia",M102:"Portugal",M103:"Francia",M104:"España"
+    },
+    awards: {
+      BOTA_ORO:"Kylian Mbappe", BOTA_PLATA:"Erling Haaland", BOTA_BRONCE:"Harry Kane",
+      BALON_ORO:"Ousman Dembele", BALON_PLATA:"Kylian Mbappe", BALON_BRONCE:"Lamine Yamal",
+      JOVEN:"Arda Guler", GUANTE:"Mike Maignan"
+    }
+  };
+}
+
 // ==================== SCORING ====================
 
 function scoreMatch(mid, pred, result) {
@@ -953,7 +1023,6 @@ function render() {
   renderMatches(s);
   renderStats(s);
   populateMatchSelect(s);
-  updatePlayerHeaders(s);
 }
 
 function updatePlayerHeaders(s) {
@@ -1008,6 +1077,8 @@ function renderRanking(s) {
 }
 
 function renderMatches(s) {
+  updatePlayerHeaders(s);
+
   // Build phase filter buttons
   const phases = ["all","Grupos","16avos","Octavos","Cuartos","Semis","Final"];
   const filterBar = document.getElementById('phase-filter');

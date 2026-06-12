@@ -410,7 +410,7 @@
       <h2>Quiniela 2026 🏆</h2>
       <div class="subtitle">USA · México · Canadá &nbsp;·&nbsp; 11 jun – 19 jul</div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center"><a href="registro.html"><button class="admin-btn" style="background:rgba(201,162,39,0.3);border-color:rgba(201,162,39,0.6)">+ Registrarse</button></a><button class="admin-btn" onclick="openAdmin()">⚙ Admin</button></div>
+    <button class="admin-btn" onclick="openAdmin()">⚙ Admin</button>
   </div>
   <div id="loading-bar" style="display:none;height:3px;background:#c9a227;width:100%"></div>
   <div class="nav-tabs" style="justify-content:space-between;align-items:center">
@@ -676,7 +676,6 @@ const PTS = {
 const SHEET_ID = "1ev8q-52EFvlsfKJyn2KEQ5YgVPsZFyGYcHuKjD_C2f8";
 const SHEET_RESULTS_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=resultados`;
 const SHEET_WRITE_URL = "https://script.google.com/macros/s/AKfycbyvElMpByOyo7B3sDvoco1kjhCxzubmDtv1VQbALY9SxNQV2OthSaBSalJpcU3fY6MW/exec";
-const SHEET_PLAYERS_URL = SHEET_WRITE_URL + "?action=getPlayers";
 
 // ==================== STATE ====================
 // Players/predictions hardcoded. Results fetched from Google Sheets.
